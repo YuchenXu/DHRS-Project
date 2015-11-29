@@ -61,9 +61,10 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
         int arg3_in = DHRS.checkdateHelper.read(_is);
         int arg4_in = DHRS.checkdateHelper.read(_is);
 
-        reserveRoom(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
+        String _arg_result = reserveRoom(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
 
         _output = handler.createReply();
+        _output.write_string(_arg_result);
 
         return _output;
     }
@@ -78,9 +79,10 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
         int arg3_in = DHRS.checkdateHelper.read(_is);
         int arg4_in = DHRS.checkdateHelper.read(_is);
 
-        cancelRoom(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
+        String _arg_result = cancelRoom(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
 
         _output = handler.createReply();
+        _output.write_string(_arg_result);
 
         return _output;
     }

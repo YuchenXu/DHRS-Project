@@ -23,7 +23,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
     /**
      * Operation reserveRoom
      */
-    public void reserveRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate)
+    public String reserveRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate)
     {
         while(true)
         {
@@ -39,7 +39,8 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                     DHRS.checkdateHelper.write(_output,checkindate);
                     DHRS.checkdateHelper.write(_output,checkoutdate);
                     _input = this._invoke(_output);
-                    return;
+                    String _arg_ret = _input.read_string();
+                    return _arg_ret;
                 }
                 catch(org.omg.CORBA.portable.RemarshalException _exception)
                 {
@@ -63,8 +64,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
                 try
                 {
-                    _self.reserveRoom( GuestID,  hotel,  RoomType,  checkindate,  checkoutdate);
-                    return;
+                    return _self.reserveRoom( GuestID,  hotel,  RoomType,  checkindate,  checkoutdate);
                 }
                 finally
                 {
@@ -77,7 +77,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
     /**
      * Operation cancelRoom
      */
-    public void cancelRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate)
+    public String cancelRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate)
     {
         while(true)
         {
@@ -93,7 +93,8 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                     DHRS.checkdateHelper.write(_output,checkindate);
                     DHRS.checkdateHelper.write(_output,checkoutdate);
                     _input = this._invoke(_output);
-                    return;
+                    String _arg_ret = _input.read_string();
+                    return _arg_ret;
                 }
                 catch(org.omg.CORBA.portable.RemarshalException _exception)
                 {
@@ -117,8 +118,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
                 try
                 {
-                    _self.cancelRoom( GuestID,  hotel,  RoomType,  checkindate,  checkoutdate);
-                    return;
+                    return _self.cancelRoom( GuestID,  hotel,  RoomType,  checkindate,  checkoutdate);
                 }
                 finally
                 {
