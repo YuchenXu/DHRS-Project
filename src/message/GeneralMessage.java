@@ -20,7 +20,24 @@ String request="";
 		// reporting a suspected respond from a hotel server
 		REPORT_NO_RESPOND,  
 		// reporting an issue of no response from a hotel server.
+		ADD_SERVER,
+		RMV_SERVER,
+		PAUSE,
+		RESUME
 	};
+	
+	public enum PropertyName {
+		GUESTID,
+		HOTEL,
+		ROOMTYPE,
+		CHECKINDATE,
+		CHECKOUTDATE,
+		RESID,
+		RATE,
+		SERVERID,
+		RETCODE
+	}
+	
 	//defult construct
 	public GeneralMessage(){
 		
@@ -30,24 +47,24 @@ String request="";
 		  request+= type+"\n";
 	}
 	// set value for a property
-	public void setValue (String property, String value){
-		request+=property+":"+value+"\n";
+	public void setValue (PropertyName property, String value){
+		request+= property.toString() +":"+value+"\n";
 	}
 	// set list of values for a property
-	public void setValueList (String property, List<String> values){
-		request+=property+":";
+	public void setValueList (PropertyName property, List<String> values){
+		request+= property.toString() +":";
 		for(int i=0;i<values.size();i++){
 			request+=values.get(i)+",";
 		}
 		
 	}
 	// get a value from a property name. Null if property not found        
-	public String getValue (String property){
+	public String getValue (PropertyName property){
 		String Return=null;
 		String[] split=request.split("\n");
 		for(String s:split){
 			String[] split2=s.split(":");
-			if (split2.length>1 && split2[0].equals(property)){
+			if (split2.length>1 && split2[0].equals(property.toString())){
 				Return=split2[1];
 				break;
 			}
@@ -57,13 +74,13 @@ String request="";
 		return Return;
 	}
 	// get a list of values from a property name. Null if property not found
-	// values are sepearted by comma ¡°,¡±
-	public List<String> getValueList (String property){
+	// values are sepearted by comma ï¿½ï¿½,ï¿½ï¿½
+	public List<String> getValueList (PropertyName property){
 		List<String> Return=new ArrayList<String>();
 		String[] split=request.split("\n");
 		for(String s:split){
 			String[] split2=s.split(":");
-			if (split2.length>1 && split2[0].equals(property)){
+			if (split2.length>1 && split2[0].equals(property.toString())){
 				
 				Return=Arrays.asList(split2[1].split(","));
 				

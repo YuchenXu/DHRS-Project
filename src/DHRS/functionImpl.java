@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import message.GeneralMessage;
+import message.GeneralMessage.PropertyName;
 
 public class functionImpl extends functionPOA {
 	HashMap<Integer, Room> reservationinfo=new HashMap<Integer, Room>();
@@ -41,8 +42,9 @@ public class functionImpl extends functionPOA {
     	byte[] sendData = new byte[1024];
     	byte[] receiveData =new byte[1024];
         sendData = sentence.getBytes();
-        DatagramPacket sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
+        DatagramPacket sendPacket;
         try {
+        	sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
 			localSocket.send(sendPacket);
 		} catch (IOException e) {
 			
@@ -114,15 +116,15 @@ public class functionImpl extends functionPOA {
 			int checkindate, int checkoutdate) {
 		//sent properties...
 		GeneralMessage g= new GeneralMessage();
-		g.setValue("GuestID",String.valueOf(GuestID));
-		g.setValue("hotel", hotel);
-		g.setValue("RoomType", RoomType);
-		g.setValue("checkindate",String.valueOf(checkindate));
-		g.setValue("checkoutdate",String.valueOf(checkoutdate));
+		g.setValue(PropertyName.GUESTID,String.valueOf(GuestID));
+		g.setValue(PropertyName.HOTEL, hotel);
+		g.setValue(PropertyName.ROOMTYPE, RoomType);
+		g.setValue(PropertyName.CHECKINDATE,String.valueOf(checkindate));
+		g.setValue(PropertyName.CHECKOUTDATE,String.valueOf(checkoutdate));
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
 		responds = handleRequest(g);
 		//return properties...
-		Long ID=Long.parseLong(responds.get(0).getValue("ID"));
+		Long ID=Long.parseLong(responds.get(0).getValue(PropertyName.RETCODE));
 		
 		for(int i=0;i<Roominfo.size();i++){
 			if(Roominfo.get(i).Type_of_room.equals(RoomType)){
