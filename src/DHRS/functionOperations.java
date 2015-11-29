@@ -10,12 +10,12 @@ public interface functionOperations
     /**
      * Operation reserveRoom
      */
-    public void reserveRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate);
+    public String reserveRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate);
 
     /**
      * Operation cancelRoom
      */
-    public void cancelRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate);
+    public String cancelRoom(int GuestID, String hotel, String RoomType, int checkindate, int checkoutdate);
 
     /**
      * Operation checkAvailability
