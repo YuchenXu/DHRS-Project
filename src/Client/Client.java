@@ -83,17 +83,19 @@ public class Client {
 					int checkoutdate=keyboard.nextInt();
 					System.out.println("Your entry is GuestID:"+guestID+" Hotel: "+hotel+" Roomtype: "+roomtype+
 							" Checkindate: "+checkindate+" Checkoutdate: "+checkoutdate);
-					FE.reserveRoom(guestID, hotel, roomtype, checkindate, checkoutdate);
+					String r = FE.reserveRoom(guestID, hotel, roomtype, checkindate, checkoutdate);
+					
+					System.out.println(r);
 					break;
 					
-//				case 11:
-//
-//						FE.reserveRoom(123, "H1", "Single", 20151117, 20151120);
-//						//System.out.println(guestID+"reserved! with "+roomtype+" "+checkindate+" to "+checkoutdate+" in "+hotel);
-//					
-//				
-//					break;
+				case 11:
+
+						r =FE.reserveRoom(123, "H1", "Single", 20151117, 20151120);
+						//System.out.println(guestID+"reserved! with "+roomtype+" "+checkindate+" to "+checkoutdate+" in "+hotel);
 					
+						System.out.println(r);
+						break;
+									
 				case 2: 
 					System.out.println("Please enter your Guest ID:");
 					int guestID2=keyboard.nextInt();

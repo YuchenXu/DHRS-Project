@@ -62,6 +62,8 @@ String request="";
 			request+=values.get(i)+",";
 		}
 		
+		request+= "\n";
+		
 	}
 	// get a value from a property name. Null if property not found        
 	public String getValue (PropertyName property){

@@ -47,23 +47,33 @@ public class functionImpl extends functionPOA {
 		byte[] sendData = new byte[1024];
 		byte[] receiveData =new byte[1024];
 		sendData = sentence.getBytes();
-		DatagramPacket sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
+		DatagramPacket sendPacket;
 		try {
+			
+			sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
 			localSocket.send(sendPacket);
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
 		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		List<GeneralMessage> messages= new ArrayList<GeneralMessage>();
+		List<GeneralMessage> messages= new ArrayList<GeneralMessage> ();
+		messages.add(null);
+		messages.add(null);
+		messages.add(null);
+
+		
 		try {
 
 			for(int i=0;i<3;i++){
-				localSocket.setSoTimeout(1000);
+				localSocket.setSoTimeout(8000);
 				localSocket.receive(receivePacket);
 				String receive=new String(receivePacket.getData());
 				GeneralMessage m=GeneralMessage.decode(receive);
-				messages.set(Integer.valueOf(m.getValue(PropertyName.SERVERID))-1, m);
+				
+				int serverID = Integer.valueOf(m.getValue(PropertyName.SERVERID));
+				if (serverID >= 1 && serverID <= 3)
+					messages.set(Integer.valueOf(m.getValue(PropertyName.SERVERID))-1, m);
 
 			}
 		} catch (SocketTimeoutException e){
@@ -82,60 +92,78 @@ public class functionImpl extends functionPOA {
 		g.setValue(PropertyName.SERVERID, String.valueOf(errorServer));
 		String encode=g.encode();
 		byte[] sendData =encode.getBytes();
-		DatagramPacket sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
+		DatagramPacket sendPacket;
 
 		try {
+			sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
+
 			localSocket.send(sendPacket);
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
 	}
-	public void preprocess(List<GeneralMessage> responds) {
+	public GeneralMessage preprocess(List<GeneralMessage> responds) {
 		GeneralMessage m1=responds.get(0);
 		GeneralMessage m2=responds.get(1);
 		GeneralMessage m3=responds.get(2);
+		
+		GeneralMessage mRet = null;
+		
 		int errorServer=0;
 		if (m1==null) {
 			errorServer=1;
+			mRet=m2;
 		}
 		if (m2==null) {
 			errorServer=2;
+			mRet=m3;
+
 		}
 		if (m3==null) {
 			errorServer=3;
+			mRet=m1;
 		}
+		
 		if(errorServer>0){
 			sendsuspectedreport(MessageType.REPORT_NO_RESPOND,errorServer);
 		}
 
+		return mRet;
 	}
+	
 	public String Process_RETCODE(List<GeneralMessage> responds) {
 		int errorServer=0;
-		long ID=Long.parseLong(responds.get(0).getValue(PropertyName.RETCODE));
-		long ID2=Long.parseLong(responds.get(1).getValue(PropertyName.RETCODE));
-		long ID3=Long.parseLong(responds.get(2).getValue(PropertyName.RETCODE));
+		long retID=0;
+		
+		String id = responds.get(0).getValue(PropertyName.RESID);
+		long ID=Long.parseLong(id);
+		long ID2=Long.parseLong(responds.get(1).getValue(PropertyName.RESID));
+		long ID3=Long.parseLong(responds.get(2).getValue(PropertyName.RESID));
 
 		if(ID==ID2 && ID2==ID3 && ID==ID3){
-			return "ok with all ID";
+			retID = ID;
 		}
 		if(ID==ID2 && ID!=ID3){
 			errorServer=3;
-			return "ok with ID"+ID;
+			retID = ID;
 		}
 		if(ID==ID3 && ID2!=ID3){
 			errorServer=2;
-			return "ok with ID"+ID;
+			retID = ID;
 		}
 		if(ID2==ID3 && ID!=ID2){
 			errorServer=1;
-			return "ok with ID"+ID2;
+			retID = ID2;
 		}
+		
 		if(errorServer>0){
 			sendsuspectedreport(MessageType.REPORT_SUSPECTED_RESPOND,errorServer);
 		}
-		return "RETCODE Process Complete";
+		
+		return "RETCODE Process Complete, ID:" + retID;
 	}
+	
 	@Override
 	public String reserveRoom(int GuestID, String hotel, String RoomType,
 			int checkindate, int checkoutdate) {
@@ -150,9 +178,12 @@ public class functionImpl extends functionPOA {
 		responds = handleRequest(g);
 
 		//return properties...
-		preprocess(responds);
-		Process_RETCODE(responds);
-		return "ReserveRoom Process Complete";
+		GeneralMessage m = preprocess(responds);
+		
+		if (m!=null) {
+			return "RETCODE Process Complete, ID:" + m.getValue(PropertyName.RESID);
+		} else
+			return Process_RETCODE(responds);
 	}
 
 	@Override
