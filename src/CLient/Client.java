@@ -38,9 +38,7 @@ public class Client {
 			showMenu();
 		}
 	}
-	public static void run() {
-		
-	}
+	
 	public static void main(String[] args) throws IOException {
 		ORB orb=ORB.init(args,null);
         BufferedReader br=new BufferedReader(new FileReader("ior.txt"));
