@@ -27,7 +27,7 @@ public class functionImpl extends functionPOA {
 	String hotel="";
 	InetSocketAddress sequencerAddress;
 	public functionImpl() {
-		
+
 	}
 	public void start_FE(int port,InetSocketAddress sequencerAddress){
 		this.sequencerAddress=sequencerAddress;
@@ -49,7 +49,7 @@ public class functionImpl extends functionPOA {
 		sendData = sentence.getBytes();
 		DatagramPacket sendPacket;
 		try {
-			
+
 			sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
 			localSocket.send(sendPacket);
 		} catch (IOException e) {
@@ -62,7 +62,7 @@ public class functionImpl extends functionPOA {
 		messages.add(null);
 		messages.add(null);
 
-		
+
 		try {
 
 			for(int i=0;i<3;i++){
@@ -70,7 +70,7 @@ public class functionImpl extends functionPOA {
 				localSocket.receive(receivePacket);
 				String receive=new String(receivePacket.getData());
 				GeneralMessage m=GeneralMessage.decode(receive);
-				
+
 				int serverID = Integer.valueOf(m.getValue(PropertyName.SERVERID));
 				if (serverID >= 1 && serverID <= 3)
 					messages.set(Integer.valueOf(m.getValue(PropertyName.SERVERID))-1, m);
@@ -107,9 +107,9 @@ public class functionImpl extends functionPOA {
 		GeneralMessage m1=responds.get(0);
 		GeneralMessage m2=responds.get(1);
 		GeneralMessage m3=responds.get(2);
-		
+
 		GeneralMessage mRet = null;
-		
+
 		int errorServer=0;
 		if (m1==null) {
 			errorServer=1;
@@ -124,18 +124,18 @@ public class functionImpl extends functionPOA {
 			errorServer=3;
 			mRet=m1;
 		}
-		
+
 		if(errorServer>0){
 			sendsuspectedreport(MessageType.REPORT_NO_RESPOND,errorServer);
 		}
 
 		return mRet;
 	}
-	
+
 	public String Process_RETCODE(List<GeneralMessage> responds) {
 		int errorServer=0;
 		long retID=0;
-		
+
 		String id = responds.get(0).getValue(PropertyName.RESID);
 		long ID=Long.parseLong(id);
 		long ID2=Long.parseLong(responds.get(1).getValue(PropertyName.RESID));
@@ -156,14 +156,40 @@ public class functionImpl extends functionPOA {
 			errorServer=1;
 			retID = ID2;
 		}
-		
+
 		if(errorServer>0){
 			sendsuspectedreport(MessageType.REPORT_SUSPECTED_RESPOND,errorServer);
 		}
-		
+
 		return "RETCODE Process Complete, ID:" + retID;
 	}
-	
+	public String Process_String(GeneralMessage.PropertyName n,List<GeneralMessage> responds){
+		int errorServer=0;
+		String respond=responds.get(0).getValue(n);;
+		String respond2=responds.get(1).getValue(n);
+		String respond3=responds.get(2).getValue(n);
+		if(respond.equals(respond2) && respond2.equals(respond3) && respond.equals(respond3)){
+			return respond;
+		}
+		if(respond.equals(respond2) && !respond.equals(respond3)){
+			errorServer=3;
+			return respond;
+		}
+		if(respond.equals(respond3) && !respond2.equals(respond3)){
+			errorServer=2;
+			return respond;
+		}
+		if(respond2.equals(respond3) && !respond.equals(respond2)){
+			errorServer=1;
+			return respond2;
+		}
+
+		if(errorServer>0){
+			sendsuspectedreport(MessageType.REPORT_SUSPECTED_RESPOND,errorServer);
+		}
+		return "Error";
+	}
+
 	@Override
 	public String reserveRoom(int GuestID, String hotel, String RoomType,
 			int checkindate, int checkoutdate) {
@@ -179,7 +205,7 @@ public class functionImpl extends functionPOA {
 
 		//return properties...
 		GeneralMessage m = preprocess(responds);
-		
+
 		if (m!=null) {
 			return "RETCODE Process Complete, ID:" + m.getValue(PropertyName.RESID);
 		} else
@@ -198,12 +224,17 @@ public class functionImpl extends functionPOA {
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
 		responds = handleRequest(g);
 		//return properties...
-		preprocess(responds);
-		Process_RETCODE(responds);
-		return "CancelRoom Process Complete";
+		GeneralMessage m = preprocess(responds);
 
-
+		if (m!=null) {
+			return "RETCODE Process Complete, ID:" + m.getValue(PropertyName.RESID);
+		} else
+			return Process_RETCODE(responds);
 	}
+
+
+
+
 
 	@Override
 	public String checkAvailability(int GuestID, String Preferredhotel,
@@ -217,15 +248,14 @@ public class functionImpl extends functionPOA {
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
 		responds = handleRequest(g);
 		//return properties...
-		preprocess(responds);
-		Long ID=Long.parseLong(responds.get(0).getValue(PropertyName.RESID));
-		String Avaliability=responds.get(0).getValue(PropertyName.AVALIABLITY);
-		if(ID>0){
-			return "ok with ID"+ID+"\n"+Avaliability;
-		}
-
-		return "fail with ID"+ID;
+		GeneralMessage m = preprocess(responds);
+		if (m!=null) {
+			return m.getValue(PropertyName.AVALIABLITY);
+		} else
+			return Process_String(PropertyName.AVALIABLITY,responds);
 	}
+
+
 
 	@Override
 	public String serviceReport(String hotel, int ServiceDate) {
@@ -235,14 +265,15 @@ public class functionImpl extends functionPOA {
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
 		responds = handleRequest(g);
 		//return properties...
-		Long ID=Long.parseLong(responds.get(0).getValue(PropertyName.RESID));
-		String ServiceReport=responds.get(1).getValue(PropertyName.SERVICEREPORT);
-		if(ID>0){
-			return "ok with ID"+ID+"\n"+ServiceReport;
-		}
-
-		return "fail with ID"+ID;
+		GeneralMessage m = preprocess(responds);
+		if (m!=null) {
+			return m.getValue(PropertyName.SERVICEREPORT);
+		} else
+			return Process_String(PropertyName.SERVICEREPORT,responds);
 	}
+
+
+
 
 	@Override
 	public String printSatus(String hotel, int Date) {
@@ -252,13 +283,11 @@ public class functionImpl extends functionPOA {
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
 		responds = handleRequest(g);
 		//return properties...
-		Long ID=Long.parseLong(responds.get(0).getValue(PropertyName.RESID));
-		String PrintSatus=responds.get(1).getValue(PropertyName.PRINTSTATUS);
-		if(ID>0){
-			return "ok with ID"+ID+"\n"+PrintSatus;
-		}
-		return "fail with ID"+ID;
-
+		GeneralMessage m = preprocess(responds);
+		if (m!=null) {
+			return m.getValue(PropertyName.PRINTSTATUS);
+		} else
+			return Process_String(PropertyName.PRINTSTATUS,responds);
 	}
 
 	@Override
@@ -272,11 +301,12 @@ public class functionImpl extends functionPOA {
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
 		responds = handleRequest(g);
 		//return properties...
-		Long ID=Long.parseLong(responds.get(0).getValue(PropertyName.RESID));
-		if(ID>0){
-			return "ok with ID"+ID+"transfer complete from "+CurrentHotel+" to "+OtherHotel+" requested by "+GuestID;
-		}
-		return "fail with ID"+ID;
+		GeneralMessage m = preprocess(responds);
+
+		if (m!=null) {
+			return "RETCODE Process Complete, ID:" + m.getValue(PropertyName.RESID);
+		} else
+			return Process_RETCODE(responds);
 	}
 
 }
