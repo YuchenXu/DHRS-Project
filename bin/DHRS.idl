@@ -1,0 +1,17 @@
+module DHRS {
+typedef long ID;
+typedef long checkdate;
+
+	interface function{
+	void reserveRoom(in ID GuestID, in string hotel, in string RoomType, 
+		in checkdate checkindate, in checkdate checkoutdate);
+	void cancelRoom(in ID GuestID, in string hotel,in string RoomType, 
+		in checkdate checkindate, in checkdate checkoutdate);
+	string checkAvailability(in ID GuestID,in string Preferredhotel,in string RoomType,
+		in checkdate checkindate, in checkdate checkoutdate );
+	string serviceReport(in string hotel,in checkdate ServiceDate);
+	string printSatus(in string hotel,in checkdate Date);
+	string transferReservation (in ID GuestID,in ID ReservationID,in string CurrentHotel,in string OtherHotel);
+	
+	};
+};
