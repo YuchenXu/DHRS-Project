@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 /**
  * Interface definition: function.
@@ -18,7 +18,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
      return _ids_list;
     }
 
-    private final static Class _opsClass = DHRS.functionOperations.class;
+    private final static Class _opsClass = DHRS_FE.functionOperations.class;
 
     /**
      * Operation reserveRoom
@@ -33,11 +33,11 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("reserveRoom",true);
-                    DHRS.IDHelper.write(_output,GuestID);
+                    DHRS_FE.IDHelper.write(_output,GuestID);
                     _output.write_string(hotel);
                     _output.write_string(RoomType);
-                    DHRS.checkdateHelper.write(_output,checkindate);
-                    DHRS.checkdateHelper.write(_output,checkoutdate);
+                    DHRS_FE.checkdateHelper.write(_output,checkindate);
+                    DHRS_FE.checkdateHelper.write(_output,checkoutdate);
                     _input = this._invoke(_output);
                     String _arg_ret = _input.read_string();
                     return _arg_ret;
@@ -61,7 +61,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("reserveRoom",_opsClass);
                 if (_so == null)
                    continue;
-                DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
+                DHRS_FE.functionOperations _self = (DHRS_FE.functionOperations) _so.servant;
                 try
                 {
                     return _self.reserveRoom( GuestID,  hotel,  RoomType,  checkindate,  checkoutdate);
@@ -87,11 +87,11 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("cancelRoom",true);
-                    DHRS.IDHelper.write(_output,GuestID);
+                    DHRS_FE.IDHelper.write(_output,GuestID);
                     _output.write_string(hotel);
                     _output.write_string(RoomType);
-                    DHRS.checkdateHelper.write(_output,checkindate);
-                    DHRS.checkdateHelper.write(_output,checkoutdate);
+                    DHRS_FE.checkdateHelper.write(_output,checkindate);
+                    DHRS_FE.checkdateHelper.write(_output,checkoutdate);
                     _input = this._invoke(_output);
                     String _arg_ret = _input.read_string();
                     return _arg_ret;
@@ -115,7 +115,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("cancelRoom",_opsClass);
                 if (_so == null)
                    continue;
-                DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
+                DHRS_FE.functionOperations _self = (DHRS_FE.functionOperations) _so.servant;
                 try
                 {
                     return _self.cancelRoom( GuestID,  hotel,  RoomType,  checkindate,  checkoutdate);
@@ -141,11 +141,11 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("checkAvailability",true);
-                    DHRS.IDHelper.write(_output,GuestID);
+                    DHRS_FE.IDHelper.write(_output,GuestID);
                     _output.write_string(Preferredhotel);
                     _output.write_string(RoomType);
-                    DHRS.checkdateHelper.write(_output,checkindate);
-                    DHRS.checkdateHelper.write(_output,checkoutdate);
+                    DHRS_FE.checkdateHelper.write(_output,checkindate);
+                    DHRS_FE.checkdateHelper.write(_output,checkoutdate);
                     _input = this._invoke(_output);
                     String _arg_ret = _input.read_string();
                     return _arg_ret;
@@ -169,7 +169,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("checkAvailability",_opsClass);
                 if (_so == null)
                    continue;
-                DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
+                DHRS_FE.functionOperations _self = (DHRS_FE.functionOperations) _so.servant;
                 try
                 {
                     return _self.checkAvailability( GuestID,  Preferredhotel,  RoomType,  checkindate,  checkoutdate);
@@ -196,7 +196,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("serviceReport",true);
                     _output.write_string(hotel);
-                    DHRS.checkdateHelper.write(_output,ServiceDate);
+                    DHRS_FE.checkdateHelper.write(_output,ServiceDate);
                     _input = this._invoke(_output);
                     String _arg_ret = _input.read_string();
                     return _arg_ret;
@@ -220,7 +220,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("serviceReport",_opsClass);
                 if (_so == null)
                    continue;
-                DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
+                DHRS_FE.functionOperations _self = (DHRS_FE.functionOperations) _so.servant;
                 try
                 {
                     return _self.serviceReport( hotel,  ServiceDate);
@@ -247,7 +247,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("printSatus",true);
                     _output.write_string(hotel);
-                    DHRS.checkdateHelper.write(_output,Date);
+                    DHRS_FE.checkdateHelper.write(_output,Date);
                     _input = this._invoke(_output);
                     String _arg_ret = _input.read_string();
                     return _arg_ret;
@@ -271,7 +271,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("printSatus",_opsClass);
                 if (_so == null)
                    continue;
-                DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
+                DHRS_FE.functionOperations _self = (DHRS_FE.functionOperations) _so.servant;
                 try
                 {
                     return _self.printSatus( hotel,  Date);
@@ -297,8 +297,8 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 try
                 {
                     org.omg.CORBA.portable.OutputStream _output = this._request("transferReservation",true);
-                    DHRS.IDHelper.write(_output,GuestID);
-                    DHRS.IDHelper.write(_output,ReservationID);
+                    DHRS_FE.IDHelper.write(_output,GuestID);
+                    DHRS_FE.IDHelper.write(_output,ReservationID);
                     _output.write_string(CurrentHotel);
                     _output.write_string(OtherHotel);
                     _input = this._invoke(_output);
@@ -324,7 +324,7 @@ public class _functionStub extends org.omg.CORBA.portable.ObjectImpl
                 org.omg.CORBA.portable.ServantObject _so = _servant_preinvoke("transferReservation",_opsClass);
                 if (_so == null)
                    continue;
-                DHRS.functionOperations _self = (DHRS.functionOperations) _so.servant;
+                DHRS_FE.functionOperations _self = (DHRS_FE.functionOperations) _so.servant;
                 try
                 {
                     return _self.transferReservation( GuestID,  ReservationID,  CurrentHotel,  OtherHotel);

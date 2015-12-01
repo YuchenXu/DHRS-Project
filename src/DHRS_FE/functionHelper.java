@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 /** 
  * Helper class for : function
@@ -12,7 +12,7 @@ public class functionHelper
      * @param a an any
      * @param t function value
      */
-    public static void insert(org.omg.CORBA.Any a, DHRS.function t)
+    public static void insert(org.omg.CORBA.Any a, DHRS_FE.function t)
     {
         a.insert_Object(t , type());
     }
@@ -23,7 +23,7 @@ public class functionHelper
      * @param a an any
      * @return the extracted function value
      */
-    public static DHRS.function extract( org.omg.CORBA.Any a )
+    public static DHRS_FE.function extract( org.omg.CORBA.Any a )
     {
         if ( !a.type().equivalent( type() ) )
         {
@@ -31,7 +31,7 @@ public class functionHelper
         }
         try
         {
-            return DHRS.functionHelper.narrow( a.extract_Object() );
+            return DHRS_FE.functionHelper.narrow( a.extract_Object() );
         }
         catch ( final org.omg.CORBA.BAD_PARAM e )
         {
@@ -73,9 +73,9 @@ public class functionHelper
      * @param istream the input stream
      * @return the readed function value
      */
-    public static DHRS.function read(org.omg.CORBA.portable.InputStream istream)
+    public static DHRS_FE.function read(org.omg.CORBA.portable.InputStream istream)
     {
-        return(DHRS.function)istream.read_Object(DHRS._functionStub.class);
+        return(DHRS_FE.function)istream.read_Object(DHRS_FE._functionStub.class);
     }
 
     /**
@@ -83,7 +83,7 @@ public class functionHelper
      * @param ostream the output stream
      * @param value function value
      */
-    public static void write(org.omg.CORBA.portable.OutputStream ostream, DHRS.function value)
+    public static void write(org.omg.CORBA.portable.OutputStream ostream, DHRS_FE.function value)
     {
         ostream.write_Object((org.omg.CORBA.portable.ObjectImpl)value);
     }

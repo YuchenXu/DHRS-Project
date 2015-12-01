@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 /**
  * Interface definition: function.

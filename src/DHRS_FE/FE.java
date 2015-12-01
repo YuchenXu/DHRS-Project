@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;

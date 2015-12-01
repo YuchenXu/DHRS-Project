@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 public class Guest {
 int Guestid;

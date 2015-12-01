@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 /**
  * Interface definition: function.
@@ -55,11 +55,11 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        int arg0_in = DHRS.IDHelper.read(_is);
+        int arg0_in = DHRS_FE.IDHelper.read(_is);
         String arg1_in = _is.read_string();
         String arg2_in = _is.read_string();
-        int arg3_in = DHRS.checkdateHelper.read(_is);
-        int arg4_in = DHRS.checkdateHelper.read(_is);
+        int arg3_in = DHRS_FE.checkdateHelper.read(_is);
+        int arg4_in = DHRS_FE.checkdateHelper.read(_is);
 
         String _arg_result = reserveRoom(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
 
@@ -73,11 +73,11 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        int arg0_in = DHRS.IDHelper.read(_is);
+        int arg0_in = DHRS_FE.IDHelper.read(_is);
         String arg1_in = _is.read_string();
         String arg2_in = _is.read_string();
-        int arg3_in = DHRS.checkdateHelper.read(_is);
-        int arg4_in = DHRS.checkdateHelper.read(_is);
+        int arg3_in = DHRS_FE.checkdateHelper.read(_is);
+        int arg4_in = DHRS_FE.checkdateHelper.read(_is);
 
         String _arg_result = cancelRoom(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
 
@@ -91,11 +91,11 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        int arg0_in = DHRS.IDHelper.read(_is);
+        int arg0_in = DHRS_FE.IDHelper.read(_is);
         String arg1_in = _is.read_string();
         String arg2_in = _is.read_string();
-        int arg3_in = DHRS.checkdateHelper.read(_is);
-        int arg4_in = DHRS.checkdateHelper.read(_is);
+        int arg3_in = DHRS_FE.checkdateHelper.read(_is);
+        int arg4_in = DHRS_FE.checkdateHelper.read(_is);
 
         String _arg_result = checkAvailability(arg0_in, arg1_in, arg2_in, arg3_in, arg4_in);
 
@@ -110,7 +110,7 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
         String arg0_in = _is.read_string();
-        int arg1_in = DHRS.checkdateHelper.read(_is);
+        int arg1_in = DHRS_FE.checkdateHelper.read(_is);
 
         String _arg_result = serviceReport(arg0_in, arg1_in);
 
@@ -125,7 +125,7 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
         String arg0_in = _is.read_string();
-        int arg1_in = DHRS.checkdateHelper.read(_is);
+        int arg1_in = DHRS_FE.checkdateHelper.read(_is);
 
         String _arg_result = printSatus(arg0_in, arg1_in);
 
@@ -139,8 +139,8 @@ public abstract class functionPOA extends org.omg.PortableServer.Servant
             final org.omg.CORBA.portable.InputStream _is,
             final org.omg.CORBA.portable.ResponseHandler handler) {
         org.omg.CORBA.portable.OutputStream _output;
-        int arg0_in = DHRS.IDHelper.read(_is);
-        int arg1_in = DHRS.IDHelper.read(_is);
+        int arg0_in = DHRS_FE.IDHelper.read(_is);
+        int arg1_in = DHRS_FE.IDHelper.read(_is);
         String arg2_in = _is.read_string();
         String arg3_in = _is.read_string();
 

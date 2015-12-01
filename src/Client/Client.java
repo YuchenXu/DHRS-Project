@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 import org.omg.CORBA.ORB;
 
-import DHRS.function;
-import DHRS.functionHelper;
+import DHRS_FE.function;
+import DHRS_FE.functionHelper;
 
 public class Client {
 	static Scanner keyboard = new Scanner(System.in);

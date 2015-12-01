@@ -1,4 +1,4 @@
-package DHRS;
+package DHRS_FE;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

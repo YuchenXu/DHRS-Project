@@ -1,16 +1,16 @@
-package DHRS;
+package DHRS_FE;
 
 /** 
- * Helper class for : checkdate
+ * Helper class for : ID
  *  
  * @author OpenORB Compiler
  */ 
-public class checkdateHelper
+public class IDHelper
 {
     /**
-     * Insert checkdate into an any
+     * Insert ID into an any
      * @param a an any
-     * @param t checkdate value
+     * @param t ID value
      */
     public static void insert(org.omg.CORBA.Any a, int t)
     {
@@ -19,10 +19,10 @@ public class checkdateHelper
     }
 
     /**
-     * Extract checkdate from an any
+     * Extract ID from an any
      *
      * @param a an any
-     * @return the extracted checkdate value
+     * @return the extracted ID value
      */
     public static int extract( org.omg.CORBA.Any a )
     {
@@ -39,20 +39,20 @@ public class checkdateHelper
     private static org.omg.CORBA.TypeCode _tc = null;
 
     /**
-     * Return the checkdate TypeCode
+     * Return the ID TypeCode
      * @return a TypeCode
      */
     public static org.omg.CORBA.TypeCode type()
     {
         if (_tc == null) {
             org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init();
-            _tc = orb.create_alias_tc( id(), "checkdate", orb.get_primitive_tc( org.omg.CORBA.TCKind.tk_long ) );
+            _tc = orb.create_alias_tc( id(), "ID", orb.get_primitive_tc( org.omg.CORBA.TCKind.tk_long ) );
         }
         return _tc;
     }
 
     /**
-     * Return the checkdate IDL ID
+     * Return the ID IDL ID
      * @return an ID
      */
     public static String id()
@@ -60,12 +60,12 @@ public class checkdateHelper
         return _id;
     }
 
-    private final static String _id = "IDL:DHRS/checkdate:1.0";
+    private final static String _id = "IDL:DHRS/ID:1.0";
 
     /**
-     * Read checkdate from a marshalled stream
+     * Read ID from a marshalled stream
      * @param istream the input stream
-     * @return the readed checkdate value
+     * @return the readed ID value
      */
     public static int read(org.omg.CORBA.portable.InputStream istream)
     {
@@ -76,9 +76,9 @@ public class checkdateHelper
     }
 
     /**
-     * Write checkdate into a marshalled stream
+     * Write ID into a marshalled stream
      * @param ostream the output stream
-     * @param value checkdate value
+     * @param value ID value
      */
     public static void write(org.omg.CORBA.portable.OutputStream ostream, int value)
     {

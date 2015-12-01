@@ -1,16 +1,16 @@
-package DHRS;
+package DHRS_FE;
 
 /** 
- * Helper class for : ID
+ * Helper class for : checkdate
  *  
  * @author OpenORB Compiler
  */ 
-public class IDHelper
+public class checkdateHelper
 {
     /**
-     * Insert ID into an any
+     * Insert checkdate into an any
      * @param a an any
-     * @param t ID value
+     * @param t checkdate value
      */
     public static void insert(org.omg.CORBA.Any a, int t)
     {
@@ -19,10 +19,10 @@ public class IDHelper
     }
 
     /**
-     * Extract ID from an any
+     * Extract checkdate from an any
      *
      * @param a an any
-     * @return the extracted ID value
+     * @return the extracted checkdate value
      */
     public static int extract( org.omg.CORBA.Any a )
     {
@@ -39,20 +39,20 @@ public class IDHelper
     private static org.omg.CORBA.TypeCode _tc = null;
 
     /**
-     * Return the ID TypeCode
+     * Return the checkdate TypeCode
      * @return a TypeCode
      */
     public static org.omg.CORBA.TypeCode type()
     {
         if (_tc == null) {
             org.omg.CORBA.ORB orb = org.omg.CORBA.ORB.init();
-            _tc = orb.create_alias_tc( id(), "ID", orb.get_primitive_tc( org.omg.CORBA.TCKind.tk_long ) );
+            _tc = orb.create_alias_tc( id(), "checkdate", orb.get_primitive_tc( org.omg.CORBA.TCKind.tk_long ) );
         }
         return _tc;
     }
 
     /**
-     * Return the ID IDL ID
+     * Return the checkdate IDL ID
      * @return an ID
      */
     public static String id()
@@ -60,12 +60,12 @@ public class IDHelper
         return _id;
     }
 
-    private final static String _id = "IDL:DHRS/ID:1.0";
+    private final static String _id = "IDL:DHRS/checkdate:1.0";
 
     /**
-     * Read ID from a marshalled stream
+     * Read checkdate from a marshalled stream
      * @param istream the input stream
-     * @return the readed ID value
+     * @return the readed checkdate value
      */
     public static int read(org.omg.CORBA.portable.InputStream istream)
     {
@@ -76,9 +76,9 @@ public class IDHelper
     }
 
     /**
-     * Write ID into a marshalled stream
+     * Write checkdate into a marshalled stream
      * @param ostream the output stream
-     * @param value ID value
+     * @param value checkdate value
      */
     public static void write(org.omg.CORBA.portable.OutputStream ostream, int value)
     {
