@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GeneralMessage {
-String request="";
+	String request="";
 
 	public enum MessageType {
 		RESERVE,
@@ -40,23 +40,30 @@ String request="";
 		RESID,
 		RATE,
 		SERVERID,
-		RETCODE
+		RETCODE,
+		ROOMSCOUNT // for check avail, service report and status report
 	}
 	
-	//defult construct
-	public GeneralMessage(){
-		
+	// construct an empty UDP request
+	// set to private preventing usage outside
+	private GeneralMessage(){
 	}
+
 	// construct an empty UDP request, with message type as defined
 	public GeneralMessage(MessageType  type ){
 		  request+= type+"\n";
 	}
 	// set value for a property
 	public void setValue (PropertyName property, String value){
-		request+= property.toString() +":"+value+"\n";
+		
+		// Replace all \n characters to special character "#R#"
+		
+		String newValue = value.replaceAll("\n", "#R#");
+		request+= property.toString() +":"+newValue+"\n";
 	}
+	
 	// set list of values for a property
-	public void setValueList (PropertyName property, List<String> values){
+/*	public void setValueList (PropertyName property, List<String> values){
 		request+= property.toString() +":";
 		for(int i=0;i<values.size();i++){
 			request+=values.get(i)+",";
@@ -64,25 +71,31 @@ String request="";
 		
 		request+= "\n";
 		
-	}
+	} */
+	
 	// get a value from a property name. Null if property not found        
 	public String getValue (PropertyName property){
 		String Return=null;
 		String[] split=request.split("\n");
 		for(String s:split){
-			String[] split2=s.split(":");
-			if (split2.length>1 && split2[0].equals(property.toString())){
-				Return=split2[1];
+			int i = s.indexOf(":");
+			if (i > 0 && s.substring(0,i).equals(property.toString())){
+				Return=s.substring(i+1);
 				break;
 			}
 			
 		}
 	
-		return Return;
+		if (Return == null)
+			return "";
+		else
+			// replace #R# back to return character
+			return Return.replaceAll("#R#", "\\\n");
 	}
+	
 	// get a list of values from a property name. Null if property not found
 	// values are sepearted by comma ��,��
-	public List<String> getValueList (PropertyName property){
+/*	public List<String> getValueList (PropertyName property){
 		List<String> Return=new ArrayList<String>();
 		String[] split=request.split("\n");
 		for(String s:split){
@@ -96,7 +109,8 @@ String request="";
 			
 		}
 		return Return;
-	}
+	} */
+	
 	// encode message in a format as below
 	// <Request_type>
 	// <propertname>:<value>
@@ -104,6 +118,7 @@ String request="";
 	public String encode (){
 		return request;
 	}
+	
 	// decode message from a String buffer
 	// return null if message format error
 	public static GeneralMessage decode (String buf){

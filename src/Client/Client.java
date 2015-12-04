@@ -40,6 +40,7 @@ public class Client {
 	}
 	
 	public static void main(String[] args) throws IOException {
+
 		ORB orb=ORB.init(args,null);
         BufferedReader br=new BufferedReader(new FileReader("ior.txt"));
         String ior=br.readLine();
@@ -90,7 +91,7 @@ public class Client {
 					
 				case 11:
 
-						r =FE.reserveRoom(123, "H1", "Single", 20151117, 20151120);
+						r =FE.reserveRoom(123, "H1", "Single", 20151217, 20151220);
 						//System.out.println(guestID+"reserved! with "+roomtype+" "+checkindate+" to "+checkoutdate+" in "+hotel);
 					
 						System.out.println(r);
@@ -110,7 +111,12 @@ public class Client {
 					int checkoutdate2=keyboard.nextInt();
 					System.out.println("Your entry is GuestID:"+guestID2+" Hotel: "+hotel2+" Roomtype: "+roomtype2+
 							" Checkindate: "+checkindate2+" Checkoutdate: "+checkoutdate2);
-					FE.cancelRoom(guestID2, hotel2, roomtype2, checkindate2, checkoutdate2);
+					r = FE.cancelRoom(guestID2, hotel2, roomtype2, checkindate2, checkoutdate2);
+					System.out.println(r);
+					break;
+				case 12:
+					r = FE.cancelRoom(123, "H1", "Single", 20151217, 20151220);
+					System.out.println(r);
 					break;
 				case 3:
 					System.out.println("Please enter your Guest ID:");
@@ -126,8 +132,14 @@ public class Client {
 					int checkoutdate3=keyboard.nextInt();
 					System.out.println("Your entry is GuestID:"+guestID3+" Hotel: "+hotel3+" Roomtype: "+roomtype3+
 							" Checkindate: "+checkindate3+" Checkoutdate: "+checkoutdate3);
-					FE.checkAvailability(guestID3, hotel3, roomtype3, checkindate3, checkoutdate3);
+					r = FE.checkAvailability(guestID3, hotel3, roomtype3, checkindate3, checkoutdate3);
+					System.out.println(r);
 					break;
+				case 13:
+					r = FE.checkAvailability(123, "H1", "Single", 20151218, 20151220);
+					System.out.println(r);
+					break;
+					
 				case 4:
 					String[] info=new String[5];
 					String[] info2=new String[5];
@@ -145,8 +157,10 @@ public class Client {
 					keyboard.nextLine();
 					System.out.println("Your entry is GuestID:"+guestID4+"ReservationID: "+ReservationID+"Current Hotel: "+hotel4+"OtherHotel: "
 							+hotel5);
-				    FE.transferReservation(guestID4, ReservationID, hotel4, hotel5);
+				    r = FE.transferReservation(guestID4, ReservationID, hotel4, hotel5);
+				    System.out.println(r);
 					break;
+
 				default:
 					System.out.println("Invalid Input, please try again.");
 				}
@@ -159,7 +173,8 @@ public class Client {
 					System.out.println("Please enter ServiceDate you want to check:");
 					int date=keyboard.nextInt();
 					System.out.println("Your entry is Hotel: "+hotel4+" ServiceDate: "+date);
-					FE.serviceReport(hotel4, date);
+					String r = FE.serviceReport(hotel4, date);
+					System.out.println(r);
 					break;
 			   case 2:
 				   System.out.println("Please enter the hotel you want to manage:(H1,H2,H3)");
@@ -167,7 +182,8 @@ public class Client {
 				   System.out.println("Please enter the Date you want to check:");
 				   int date2=keyboard.nextInt();
 				   System.out.println("Your entry is Hotel: "+hotel5+" ServiceDate: "+date2);
-					FE.printSatus(hotel5, date2);
+				   r = FE.printSatus(hotel5, date2);
+				   System.out.println(r);
 					break;
 			   default:
 					System.out.println("Invalid Input, please try again.");

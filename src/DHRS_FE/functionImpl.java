@@ -43,6 +43,8 @@ public class functionImpl extends functionPOA {
 	//  send the request to sequencer, and receive results. (as list of message)
 	// and finally close the local socket
 	private List<GeneralMessage> handleRequest (GeneralMessage msg){
+		
+		System.out.println ("Handling request:" + msg.encode());
 		String sentence=msg.encode();
 		byte[] sendData = new byte[1024];
 		byte[] receiveData =new byte[1024];
@@ -83,6 +85,13 @@ public class functionImpl extends functionPOA {
 
 			e.printStackTrace();
 		} 
+		
+		System.out.println("Received responds:");
+		for (GeneralMessage r : messages) 
+			if (r!=null) {
+				System.out.println ("------");
+				System.out.println(r.encode());
+			}
 
 		return messages;
 	}
@@ -103,6 +112,7 @@ public class functionImpl extends functionPOA {
 			e.printStackTrace();
 		}
 	}
+	
 	public GeneralMessage preprocess(List<GeneralMessage> responds) {
 		GeneralMessage m1=responds.get(0);
 		GeneralMessage m2=responds.get(1);
@@ -194,7 +204,7 @@ public class functionImpl extends functionPOA {
 	public String reserveRoom(int GuestID, String hotel, String RoomType,
 			int checkindate, int checkoutdate) {
 		//sent properties...
-		GeneralMessage g= new GeneralMessage();
+		GeneralMessage g= new GeneralMessage(MessageType.RESERVE);
 		g.setValue(PropertyName.GUESTID,String.valueOf(GuestID));
 		g.setValue(PropertyName.HOTEL, hotel);
 		g.setValue(PropertyName.ROOMTYPE, RoomType);
@@ -215,7 +225,7 @@ public class functionImpl extends functionPOA {
 	@Override
 	public String cancelRoom(int GuestID, String hotel, String RoomType,
 			int checkindate, int checkoutdate) {
-		GeneralMessage g= new GeneralMessage();
+		GeneralMessage g= new GeneralMessage(MessageType.CANCEL);
 		g.setValue(PropertyName.GUESTID,String.valueOf(GuestID));
 		g.setValue(PropertyName.HOTEL, hotel);
 		g.setValue(PropertyName.ROOMTYPE, RoomType);
@@ -239,7 +249,7 @@ public class functionImpl extends functionPOA {
 	@Override
 	public String checkAvailability(int GuestID, String Preferredhotel,
 			String RoomType, int checkindate, int checkoutdate) {
-		GeneralMessage g= new GeneralMessage();
+		GeneralMessage g= new GeneralMessage(MessageType.CHECKAVAILABILITY);
 		g.setValue(PropertyName.GUESTID,String.valueOf(GuestID));
 		g.setValue(PropertyName.HOTEL, Preferredhotel);
 		g.setValue(PropertyName.ROOMTYPE, RoomType);
@@ -259,7 +269,7 @@ public class functionImpl extends functionPOA {
 
 	@Override
 	public String serviceReport(String hotel, int ServiceDate) {
-		GeneralMessage g= new GeneralMessage();
+		GeneralMessage g= new GeneralMessage(MessageType.SERVICEREPORT);
 		g.setValue(PropertyName.HOTEL, hotel);
 		g.setValue(PropertyName.CHECKOUTDATE,String.valueOf(ServiceDate));
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
@@ -277,7 +287,7 @@ public class functionImpl extends functionPOA {
 
 	@Override
 	public String printSatus(String hotel, int Date) {
-		GeneralMessage g= new GeneralMessage();
+		GeneralMessage g= new GeneralMessage(MessageType.STATUSREPORT);
 		g.setValue(PropertyName.HOTEL, hotel);
 		g.setValue(PropertyName.DATE,String.valueOf(Date));
 		List<GeneralMessage> responds = new ArrayList<GeneralMessage>();  
@@ -293,7 +303,7 @@ public class functionImpl extends functionPOA {
 	@Override
 	public String transferReservation(int GuestID, int ReservationID,
 			String CurrentHotel, String OtherHotel) {
-		GeneralMessage g= new GeneralMessage();
+		GeneralMessage g= new GeneralMessage(MessageType.TRANSFER);
 		g.setValue(PropertyName.GUESTID, String.valueOf(GuestID));
 		g.setValue(PropertyName.RESID, String.valueOf(ReservationID));
 		g.setValue(PropertyName.HOTEL, CurrentHotel);
