@@ -1,9 +1,4 @@
 package message;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class GeneralMessage {
 	String request="";
@@ -23,7 +18,8 @@ public class GeneralMessage {
 		ADD_SERVER,
 		RMV_SERVER,
 		PAUSE,
-		RESUME
+		SYNC_REQUEST,
+		SYNC_COMPLETE
 	};
 	
 	public enum PropertyName {
@@ -41,7 +37,11 @@ public class GeneralMessage {
 		RATE,
 		SERVERID,
 		RETCODE,
-		ROOMSCOUNT // for check avail, service report and status report
+		ROOMSCOUNT, // for check avail, service report and status report
+		SYNC_FROM_SRV_ID,
+		SYNC_TO_SRV_ID,
+		SYNC_TO_SRV_ADDR,
+		SYNC_TO_SRV_PORT
 	}
 	
 	// construct an empty UDP request
