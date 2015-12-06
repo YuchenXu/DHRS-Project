@@ -27,9 +27,9 @@ public class FE {
 		ORB orb=ORB.init(args,null);
 		try {
 			POA rootpoa=POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			InetSocketAddress testaddress= new InetSocketAddress("localhost",2018);
+			InetSocketAddress testaddress= new InetSocketAddress("cecil",2018);
 			functionImpl FE=new functionImpl();
-			FE.start_FE(2015, testaddress);
+			FE.start_FE(testaddress);
 			byte[] id=rootpoa.activate_object(FE);
 			org.omg.CORBA.Object ref=rootpoa.id_to_reference(id);
 			String ior=orb.object_to_string(ref);

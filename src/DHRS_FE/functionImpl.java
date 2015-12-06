@@ -18,7 +18,7 @@ public class functionImpl extends functionPOA {
 	HashMap<Integer, Room> reservationinfo=new HashMap<Integer, Room>();
 	ArrayList<Room> Roominfo = new ArrayList<Room>();
 	HashMap<Integer, Guest> reservationcheck=new HashMap<Integer, Guest>();
-	DatagramSocket localSocket;
+
 	int ReservavtionID=0;
 	String hroominfo="";
 	String serviceReport="";
@@ -29,21 +29,16 @@ public class functionImpl extends functionPOA {
 	public functionImpl() {
 
 	}
-	public void start_FE(int port,InetSocketAddress sequencerAddress){
+	public void start_FE(InetSocketAddress sequencerAddress){
 		this.sequencerAddress=sequencerAddress;
-		try {
-			localSocket = new DatagramSocket(port);
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 	}
 	// handle the request specified by msg
 	// open a local socket,
 	//  send the request to sequencer, and receive results. (as list of message)
 	// and finally close the local socket
 	private List<GeneralMessage> handleRequest (GeneralMessage msg){
-		
+		DatagramSocket localSocket=null; 
 		System.out.println ("Handling request:" + msg.encode());
 		String sentence=msg.encode();
 		byte[] sendData = new byte[1024];
@@ -51,24 +46,20 @@ public class functionImpl extends functionPOA {
 		sendData = sentence.getBytes();
 		DatagramPacket sendPacket;
 		try {
-
+			localSocket= new DatagramSocket();
 			sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
 			localSocket.send(sendPacket);
-		} catch (IOException e) {
 
-			e.printStackTrace();
-		}
-		DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-		List<GeneralMessage> messages= new ArrayList<GeneralMessage> ();
-		messages.add(null);
-		messages.add(null);
-		messages.add(null);
+			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+			List<GeneralMessage> messages= new ArrayList<GeneralMessage> ();
+			messages.add(null);
+			messages.add(null);
+			messages.add(null);
 
 
-		try {
 
 			for(int i=0;i<3;i++){
-				localSocket.setSoTimeout(8000);
+				//localSocket.setSoTimeout(8000);
 				localSocket.receive(receivePacket);
 				String receive=new String(receivePacket.getData());
 				GeneralMessage m=GeneralMessage.decode(receive);
@@ -78,41 +69,52 @@ public class functionImpl extends functionPOA {
 					messages.set(Integer.valueOf(m.getValue(PropertyName.SERVERID))-1, m);
 
 			}
-		} catch (SocketTimeoutException e){
 
+			System.out.println("Received responds:");
+			for (GeneralMessage r : messages) 
+				if (r!=null) {
+					System.out.println ("------");
+					System.out.println(r.encode());
+				}
+
+			localSocket.close();
+			return messages;
+		} catch (SocketTimeoutException e){
+			localSocket.close();
+			return null;
 
 		} catch (IOException e) {
-
+			localSocket.close();
 			e.printStackTrace();
+			return null;
 		} 
-		
-		System.out.println("Received responds:");
-		for (GeneralMessage r : messages) 
-			if (r!=null) {
-				System.out.println ("------");
-				System.out.println(r.encode());
-			}
 
-		return messages;
+
 	}
 
 	public void sendsuspectedreport(MessageType t,int errorServer){
-		GeneralMessage g= new GeneralMessage(t);
-		g.setValue(PropertyName.SERVERID, String.valueOf(errorServer));
-		String encode=g.encode();
-		byte[] sendData =encode.getBytes();
-		DatagramPacket sendPacket;
-
+		DatagramSocket localSocket =null;
 		try {
+			localSocket = new DatagramSocket();
+
+			GeneralMessage g= new GeneralMessage(t);
+			g.setValue(PropertyName.SERVERID, String.valueOf(errorServer));
+			String encode=g.encode();
+			byte[] sendData =encode.getBytes();
+			DatagramPacket sendPacket;
+
+
 			sendPacket=new DatagramPacket(sendData,sendData.length,sequencerAddress);
 
 			localSocket.send(sendPacket);
-		} catch (IOException e) {
-
+			localSocket.close();
+		}  
+		catch (IOException e) {
+			localSocket.close();
 			e.printStackTrace();
 		}
 	}
-	
+
 	public GeneralMessage preprocess(List<GeneralMessage> responds) {
 		GeneralMessage m1=responds.get(0);
 		GeneralMessage m2=responds.get(1);
@@ -141,7 +143,6 @@ public class functionImpl extends functionPOA {
 
 		return mRet;
 	}
-
 	public String Process_RETCODE(List<GeneralMessage> responds) {
 		int errorServer=0;
 		long retID=0;
@@ -173,25 +174,30 @@ public class functionImpl extends functionPOA {
 
 		return "RETCODE Process Complete, ID:" + retID;
 	}
-	public String Process_String(GeneralMessage.PropertyName n,List<GeneralMessage> responds){
+	public String Process_String(GeneralMessage.PropertyName n,GeneralMessage.PropertyName r,List<GeneralMessage> responds){
 		int errorServer=0;
-		String respond=responds.get(0).getValue(n);;
-		String respond2=responds.get(1).getValue(n);
-		String respond3=responds.get(2).getValue(n);
-		if(respond.equals(respond2) && respond2.equals(respond3) && respond.equals(respond3)){
-			return respond;
+		String check  = responds.get(0).getValue(n);
+		String check2 = responds.get(1).getValue(n);
+		String check3 = responds.get(2).getValue(n);
+		String respond = responds.get(0).getValue(r);
+		String respond2 = responds.get(0).getValue(r);
+		String respond3 = responds.get(0).getValue(r);
+		String totalrespond = respond+"\n"+respond2+"\n"+respond3;
+
+		if(check.equals(check2) && check2.equals(check3) && check.equals(check3)){
+			return totalrespond;
 		}
-		if(respond.equals(respond2) && !respond.equals(respond3)){
+		if(check.equals(check2) && !check.equals(check3)){
 			errorServer=3;
-			return respond;
+			return totalrespond;
 		}
-		if(respond.equals(respond3) && !respond2.equals(respond3)){
+		if(check.equals(check3) && !check2.equals(check3)){
 			errorServer=2;
-			return respond;
+			return totalrespond;
 		}
-		if(respond2.equals(respond3) && !respond.equals(respond2)){
+		if(check2.equals(check3) && !check.equals(check2)){
 			errorServer=1;
-			return respond2;
+			return totalrespond;
 		}
 
 		if(errorServer>0){
@@ -199,6 +205,7 @@ public class functionImpl extends functionPOA {
 		}
 		return "Error";
 	}
+
 
 	@Override
 	public String reserveRoom(int GuestID, String hotel, String RoomType,
@@ -262,7 +269,7 @@ public class functionImpl extends functionPOA {
 		if (m!=null) {
 			return m.getValue(PropertyName.AVALIABLITY);
 		} else
-			return Process_String(PropertyName.AVALIABLITY,responds);
+			return Process_String(PropertyName.ROOMSCOUNT,PropertyName.AVALIABLITY,responds);
 	}
 
 
@@ -279,7 +286,7 @@ public class functionImpl extends functionPOA {
 		if (m!=null) {
 			return m.getValue(PropertyName.SERVICEREPORT);
 		} else
-			return Process_String(PropertyName.SERVICEREPORT,responds);
+			return Process_String(PropertyName.ROOMSCOUNT,PropertyName.SERVICEREPORT,responds);
 	}
 
 
@@ -297,7 +304,7 @@ public class functionImpl extends functionPOA {
 		if (m!=null) {
 			return m.getValue(PropertyName.PRINTSTATUS);
 		} else
-			return Process_String(PropertyName.PRINTSTATUS,responds);
+			return Process_String(PropertyName.ROOMSCOUNT,PropertyName.PRINTSTATUS,responds);
 	}
 
 	@Override
