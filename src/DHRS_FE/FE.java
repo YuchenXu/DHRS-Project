@@ -27,7 +27,7 @@ public class FE {
 		ORB orb=ORB.init(args,null);
 		try {
 			POA rootpoa=POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-			InetSocketAddress testaddress= new InetSocketAddress("cecil",2018);
+			InetSocketAddress testaddress= new InetSocketAddress(args[0],Integer.valueOf(args[1]));
 			functionImpl FE=new functionImpl();
 			FE.start_FE(testaddress);
 			byte[] id=rootpoa.activate_object(FE);

@@ -59,14 +59,22 @@ public class functionImpl extends functionPOA {
 
 
 			for(int i=0;i<3;i++){
-				//localSocket.setSoTimeout(8000);
-				localSocket.receive(receivePacket);
-				String receive=new String(receivePacket.getData());
-				GeneralMessage m=GeneralMessage.decode(receive);
+				localSocket.setSoTimeout(3000);
+				
+				try {
+					localSocket.receive(receivePacket);
+					
+					String receive=new String(receivePacket.getData());
+					GeneralMessage m=GeneralMessage.decode(receive);
 
-				int serverID = Integer.valueOf(m.getValue(PropertyName.SERVERID));
-				if (serverID >= 1 && serverID <= 3)
-					messages.set(Integer.valueOf(m.getValue(PropertyName.SERVERID))-1, m);
+					int serverID = Integer.valueOf(m.getValue(PropertyName.SERVERID));
+					if (serverID >= 1 && serverID <= 3)
+						messages.set(Integer.valueOf(m.getValue(PropertyName.SERVERID))-1, m);
+					
+				} catch (SocketTimeoutException e) {
+					System.out.println ("Time out waiting for server:" + (i+1));
+				}
+
 
 			}
 
@@ -79,10 +87,7 @@ public class functionImpl extends functionPOA {
 
 			localSocket.close();
 			return messages;
-		} catch (SocketTimeoutException e){
-			localSocket.close();
-			return null;
-
+			
 		} catch (IOException e) {
 			localSocket.close();
 			e.printStackTrace();
@@ -122,27 +127,31 @@ public class functionImpl extends functionPOA {
 
 		GeneralMessage mRet = null;
 
-		int errorServer=0;
 		if (m1==null) {
-			errorServer=1;
-			mRet=m2;
+			sendsuspectedreport(MessageType.REPORT_NO_RESPOND, 1);
+			if (m2!=null) 
+				mRet = m2;
+			else
+				mRet = m3;
 		}
 		if (m2==null) {
-			errorServer=2;
-			mRet=m3;
-
+			sendsuspectedreport(MessageType.REPORT_NO_RESPOND, 2);
+			if (m1!=null) 
+				mRet = m1;
+			else
+				mRet = m3;
 		}
 		if (m3==null) {
-			errorServer=3;
-			mRet=m1;
+			sendsuspectedreport(MessageType.REPORT_NO_RESPOND, 3);
+			if (m1!=null) 
+				mRet = m1;
+			else
+				mRet = m2;
 		}
-
-		if(errorServer>0){
-			sendsuspectedreport(MessageType.REPORT_NO_RESPOND,errorServer);
-		}
-
-		return mRet;
+		
+		return mRet; // if it is null, could be all null, or none-null
 	}
+	
 	public String Process_RETCODE(List<GeneralMessage> responds) {
 		int errorServer=0;
 		long retID=0;
@@ -180,30 +189,32 @@ public class functionImpl extends functionPOA {
 		String check2 = responds.get(1).getValue(n);
 		String check3 = responds.get(2).getValue(n);
 		String respond = responds.get(0).getValue(r);
-		String respond2 = responds.get(0).getValue(r);
-		String respond3 = responds.get(0).getValue(r);
-		String totalrespond = respond+"\n"+respond2+"\n"+respond3;
+		String respond2 = responds.get(1).getValue(r);
+		String respond3 = responds.get(2).getValue(r);
+		String totalrespond = "----Server 1----\n" + respond+
+				"----Server 2----\n"+respond2+"----Server 3----\n"+respond3;
 
 		if(check.equals(check2) && check2.equals(check3) && check.equals(check3)){
-			return totalrespond;
+			//return totalrespond;
 		}
 		if(check.equals(check2) && !check.equals(check3)){
 			errorServer=3;
-			return totalrespond;
+			//return totalrespond;
 		}
 		if(check.equals(check3) && !check2.equals(check3)){
 			errorServer=2;
-			return totalrespond;
+			//return totalrespond;
 		}
 		if(check2.equals(check3) && !check.equals(check2)){
 			errorServer=1;
-			return totalrespond;
+			//return totalrespond;
 		}
 
 		if(errorServer>0){
 			sendsuspectedreport(MessageType.REPORT_SUSPECTED_RESPOND,errorServer);
 		}
-		return "Error";
+		
+		return totalrespond;
 	}
 
 
